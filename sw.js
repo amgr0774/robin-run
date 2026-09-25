@@ -1,5 +1,5 @@
 /* Robin Run - offline cache */
-var CACHE = 'robin-run-v3';
+var CACHE = 'robin-run-v4';
 var ASSETS = [
   './',
   './index.html',
@@ -27,13 +27,38 @@ self.addEventListener('activate', function (e) {
   }).then(function () { return self.clients.claim(); }));
 });
 
+/* The game page is fetched network-first, so a new version shows up as soon
+   as you open it online — cache-first meant an installed phone could keep
+   serving a stale build indefinitely. Everything else stays cache-first,
+   which is what makes offline play work. */
+function isPage(req) {
+  return req.mode === 'navigate' ||
+         (req.headers.get('accept') || '').indexOf('text/html') !== -1;
+}
+
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
+
+  if (isPage(e.request)) {
+    e.respondWith(
+      fetch(e.request).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put(e.request, copy).catch(function () {}); });
+        return res;
+      }).catch(function () {
+        // offline: fall back to whatever we cached last
+        return caches.match(e.request).then(function (hit) {
+          return hit || caches.match('./index.html');
+        });
+      })
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then(function (hit) {
       if (hit) return hit;
       return fetch(e.request).then(function (res) {
-        // stash fonts and anything else picked up along the way
         var copy = res.clone();
         caches.open(CACHE).then(function (c) { c.put(e.request, copy).catch(function () {}); });
         return res;

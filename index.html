@@ -548,6 +548,7 @@
     o1.connect(g); o2.connect(g); g.connect(bus);
     o1.start(when); o2.start(when);
     o1.stop(when + hold + 0.05); o2.stop(when + hold + 0.05);
+    trackNote(o1, when + hold + 0.05); trackNote(o2, when + hold + 0.05);
   }
 
   function bassNote(freq, when, dur, level) {
@@ -560,6 +561,7 @@
     g.gain.linearRampToValueAtTime(0, when + dur);
     o.connect(g); g.connect(bassIn);
     o.start(when); o.stop(when + dur + 0.04);
+    trackNote(o, when + dur + 0.04);
   }
 
   function kick(when, level) {
@@ -571,6 +573,7 @@
     g.gain.exponentialRampToValueAtTime(0.0001, when + 0.24);
     o.connect(g); g.connect(drumBus);
     o.start(when); o.stop(when + 0.26);
+    trackNote(o, when + 0.26);
   }
 
   function snare(when, level) {
@@ -582,12 +585,14 @@
     g.gain.exponentialRampToValueAtTime(0.0001, when + 0.17);
     s.connect(bp); bp.connect(g); g.connect(drumBus);
     s.start(when); s.stop(when + 0.2);
+    trackNote(s, when + 0.2);
     var o = actx.createOscillator(), og = actx.createGain();   // the drum's body
     o.type = 'triangle'; o.frequency.setValueAtTime(185, when);
     og.gain.setValueAtTime(level * 0.45, when);
     og.gain.exponentialRampToValueAtTime(0.0001, when + 0.09);
     o.connect(og); og.connect(drumBus);
     o.start(when); o.stop(when + 0.11);
+    trackNote(o, when + 0.11);
   }
 
   function hat(when, level, open) {
@@ -600,6 +605,17 @@
     g.gain.exponentialRampToValueAtTime(0.0001, when + d);
     s.connect(hp); hp.connect(g); g.connect(drumBus);
     s.start(when); s.stop(when + d + 0.05);
+    trackNote(s, when + d + 0.05);
+  }
+
+  // every oscillator we schedule, so death can silence them outright
+  var liveNotes = [];
+  function trackNote(src, endsAt) {
+    liveNotes.push({ src: src, endsAt: endsAt });
+    if (liveNotes.length > 150) {                 // drop ones that already finished
+      var now = actx.currentTime;
+      liveNotes = liveNotes.filter(function (n) { return n.endsAt > now; });
+    }
   }
 
   function musicLevel() { return soundOn ? 0.5 : 0; }
@@ -618,9 +634,19 @@
     if (!actx || !musicGain) return;
     music.playing = false;                      // stop scheduling anything new
     var t = actx.currentTime;
-    musicGain.gain.cancelScheduledValues(t);
-    musicGain.gain.setValueAtTime(musicGain.gain.value, t);
-    musicGain.gain.linearRampToValueAtTime(0, t + 0.3);   // notes already queued fade out
+    var now = musicGain.gain.value;             // read BEFORE cancelling, or it reads back wrong
+    try { musicGain.gain.cancelAndHoldAtTime(t); }
+    catch (e) { musicGain.gain.cancelScheduledValues(t); }
+    musicGain.gain.setValueAtTime(now, t);
+    musicGain.gain.linearRampToValueAtTime(0.0001, t + 0.25);
+    musicGain.gain.setValueAtTime(0, t + 0.26);
+
+    // and actually stop the notes, so nothing can ring on past the fade
+    var cut = t + 0.25;
+    for (var i = 0; i < liveNotes.length; i++) {
+      try { liveNotes[i].src.stop(cut); } catch (e) { /* already finished */ }
+    }
+    liveNotes = [];
   }
 
   function musicTick() {
