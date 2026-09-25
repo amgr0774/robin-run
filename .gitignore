@@ -1,1 +1,7 @@
 .DS_Store
+
+# Capacitor / Android build output
+node_modules/
+android/
+.gradle/
+*.keystore

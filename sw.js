@@ -1,5 +1,5 @@
 /* Robin Run - offline cache */
-var CACHE = 'robin-run-v1';
+var CACHE = 'robin-run-v2';
 var ASSETS = [
   './',
   './index.html',

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://amgr0774.github.io/robin-run/sitemap.xml
