@@ -1,4 +1,4 @@
-# Robin Run
+# RobinDash
 
 A 3D endless runner set in a sunny garden. You play a robin. A cat is chasing you.
 Flap over the flower pots, tuck under the bird feeders, and go around the stone walls
@@ -35,12 +35,12 @@ Feathers are worth 10 points. The golden berry pulls every feather to you for 8 
 Pages serves over HTTPS, which the offline worker requires. On a free account the
 repository has to be **public** for Pages to work.
 
-1. Create an empty repository at <https://github.com/new>, named `robin-run`.
+1. Create an empty repository at <https://github.com/new>, named `robindash`.
    Do not add a README, licence or `.gitignore` — this folder already has what it needs.
 2. Back here, connect it and push. Replace `YOUR-USERNAME`:
 
    ```bash
-   git remote add origin https://github.com/YOUR-USERNAME/robin-run.git
+   git remote add origin https://github.com/YOUR-USERNAME/robindash.git
    git push -u origin main
    ```
 
@@ -50,7 +50,7 @@ repository has to be **public** for Pages to work.
 4. Wait a minute or two. The address will be:
 
    ```
-   https://YOUR-USERNAME.github.io/robin-run/
+   https://YOUR-USERNAME.github.io/robindash/
    ```
 
 ## Installing it on a phone
@@ -78,5 +78,5 @@ Pages redeploys on its own within a minute or so.
 
 One gotcha: the service worker caches everything, so a phone that already has the
 game installed may keep showing the old version. Bump the `CACHE` name near the top
-of `sw.js` (`robin-run-v1` → `robin-run-v2`) whenever you change the game, and the
+of `sw.js` (`robindash-v1` → `robindash-v2`) whenever you change the game, and the
 next visit will pull the new files.

@@ -1,7 +1,7 @@
 {
-  "name": "Robin Run",
-  "short_name": "Robin Run",
-  "description": "A sunny-garden endless runner. Outrun the cat.",
+  "name": "RobinDash",
+  "short_name": "RobinDash",
+  "description": "A free 3D endless runner. Play a robin in a sunny garden and outrun the cat.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
