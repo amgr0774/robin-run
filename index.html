@@ -423,7 +423,7 @@
   // Built the way a real guitar rig is: strings -> overdrive -> speaker cab -> room.
   var musicGain = null, rhythmIn = null, leadIn = null, bassIn = null, drumBus = null;
   var NOISE = null;
-  var music = { timer: null, next: 0, step: 0, playing: false };
+  var music = { timer: null, next: 0, step: 0, playing: false, connected: false, cut: null, wasPlaying: false };
 
   // A2 is the open A string on a guitar, so semitone 0 = 110Hz
   function hz(semi) { return 110 * Math.pow(2, semi / 12); }
@@ -473,6 +473,7 @@
 
     musicGain = actx.createGain();
     musicGain.gain.value = 0;          // musicStart fades it in
+    music.connected = true;
     musicGain.connect(actx.destination);
 
     // shared room reverb
@@ -622,6 +623,11 @@
 
   function musicStart() {
     if (!actx || !musicGain) return;
+    if (music.cut) { clearTimeout(music.cut); music.cut = null; }
+    if (!music.connected) {                     // plug the music bus back in
+      try { musicGain.connect(actx.destination); } catch (e) {}
+      music.connected = true;
+    }
     music.playing = true;
     music.next = actx.currentTime + 0.12;       // resync, don't replay a backlog
     var t = actx.currentTime;
@@ -647,6 +653,15 @@
       try { liveNotes[i].src.stop(cut); } catch (e) { /* already finished */ }
     }
     liveNotes = [];
+
+    // finally pull the bus out of the speakers altogether. whatever else is
+    // still running in there, it now has nowhere to go.
+    if (music.cut) clearTimeout(music.cut);
+    music.cut = setTimeout(function () {
+      music.cut = null;
+      try { musicGain.disconnect(); } catch (e) {}
+      music.connected = false;
+    }, 300);
   }
 
   function musicTick() {
@@ -1948,6 +1963,7 @@
 
   function finishRun() {
     state = 'dead';
+    musicStop();                     // belt and braces - caught() already did this
     var sc = scoreNow();
     var isBest = sc > best;
     if (isBest) { best = sc; store('rr_best', String(best)); }
@@ -2396,6 +2412,17 @@
     camera.fov = w / h < 0.78 ? 66 : 58;
     camera.updateProjectionMatrix();
   }
+
+  // the render loop stops when the page is hidden, but setInterval does not,
+  // so without this the music plays on after the phone is locked
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (music.playing) { music.wasPlaying = true; musicStop(); }
+    } else if (music.wasPlaying) {
+      music.wasPlaying = false;
+      if (state === 'playing' || state === 'intro') musicStart();
+    }
+  });
 
   window.addEventListener('resize', resize);
   if (window.ResizeObserver) new ResizeObserver(resize).observe(frameEl);
