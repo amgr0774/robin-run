@@ -1,7 +1,7 @@
 {
-  "name": "RobinDash",
-  "short_name": "RobinDash",
-  "description": "A free 3D endless runner. Play a robin in a sunny garden and outrun the cat.",
+  "name": "Feather Sprint",
+  "short_name": "Feather Sprint",
+  "description": "A free 3D bird dashing game. Play a robin in a sunny garden and outrun the cat.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
