@@ -75,7 +75,7 @@
   }
   *{box-sizing:border-box}
   body{
-    background:radial-gradient(1100px 600px at 50% -10%, #3E6B1E 0%, rgba(62,107,30,0) 62%), var(--night);
+    background:radial-gradient(1100px 600px at 50% -10%, #1E3A0C 0%, rgba(30,58,12,0) 62%), var(--night);
     color:var(--ink); font-family:var(--ui);
     min-height:100vh; display:flex; flex-direction:column; align-items:center;
     gap:14px;
@@ -749,11 +749,11 @@
 
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.LinearToneMapping;   // ACES was desaturating the whole garden
-  renderer.toneMappingExposure = 1.04;
+  renderer.toneMappingExposure = 0.94;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xC6E4F7, 34, 76);      // pale sky haze, kept well back
+  scene.fog = new THREE.Fog(0x5C86AE, 34, 76);      // pale sky haze, kept well back
 
   var CAM_Y = 2.55, CAM_Z = 6.1;          // where the chase camera lives
   var camera = new THREE.PerspectiveCamera(58, 1, 0.1, 200);
@@ -765,11 +765,11 @@
     c.width = 1024; c.height = 512;
     var g = c.getContext('2d');
     var grd = g.createLinearGradient(0, 0, 0, 512);
-    grd.addColorStop(0.00, '#1668D6');
-    grd.addColorStop(0.32, '#3E9BEC');
-    grd.addColorStop(0.62, '#7FC6F4');
-    grd.addColorStop(0.86, '#BBE3FA');
-    grd.addColorStop(1.00, '#E4F3FD');
+    grd.addColorStop(0.00, '#082C6E');
+    grd.addColorStop(0.32, '#124F9E');
+    grd.addColorStop(0.62, '#2A76BE');
+    grd.addColorStop(0.86, '#4A93CE');
+    grd.addColorStop(1.00, '#6FACD6');
     g.fillStyle = grd; g.fillRect(0, 0, 1024, 512);
 
     var seed = 31;
@@ -788,9 +788,9 @@
     // bright white fair-weather clouds
     function puff(x, y, r, a) {
       var cg = g.createRadialGradient(x, y - r * 0.25, r * 0.12, x, y, r);
-      cg.addColorStop(0.00, 'rgba(255,255,255,' + a + ')');
-      cg.addColorStop(0.48, 'rgba(240,248,255,' + (a * 0.76) + ')');
-      cg.addColorStop(1.00, 'rgba(198,222,244,0)');
+      cg.addColorStop(0.00, 'rgba(206,224,242,' + a + ')');
+      cg.addColorStop(0.48, 'rgba(160,190,220,' + (a * 0.76) + ')');
+      cg.addColorStop(1.00, 'rgba(110,150,190,0)');
       g.fillStyle = cg;
       g.beginPath(); g.arc(x, y, r, 0, 6.2832); g.fill();
     }
@@ -812,9 +812,9 @@
   })();
 
   // ---- lights: low warm sun, cool sky bounce
-  scene.add(new THREE.HemisphereLight(0xAFD8FF, 0x5E9C2A, 0.42));  // open blue sky overhead
+  scene.add(new THREE.HemisphereLight(0x7FA8D6, 0x3A6A1C, 0.30));  // open blue sky overhead
 
-  var sun = new THREE.DirectionalLight(0xFFF6E2, 1.55);
+  var sun = new THREE.DirectionalLight(0xFFE9C4, 1.25);
   sun.position.set(7, 16, 6);                      // high midday sun, short crisp shadows
   sun.target.position.set(0, 0, -10);
   scene.add(sun); scene.add(sun.target);
@@ -829,7 +829,7 @@
   sun.shadow.bias = -0.0013;
   sun.shadow.normalBias = 0.02;
 
-  var rim = new THREE.DirectionalLight(0x9FCEFF, 0.26);
+  var rim = new THREE.DirectionalLight(0x6A9ACC, 0.22);
   rim.position.set(-8, 5, 6);
   scene.add(rim);
 
@@ -843,13 +843,13 @@
     c.width = 512; c.height = 512;
     var g = c.getContext('2d');
 
-    g.fillStyle = '#E3A85A'; g.fillRect(0, 0, 512, 512);
+    g.fillStyle = '#8A5C2C'; g.fillRect(0, 0, 512, 512);
 
     // gravel grain
     for (var i = 0; i < 4200; i++) {
       var t = Math.random();
-      g.fillStyle = t < 0.5 ? 'rgba(150,108,58,' + (Math.random() * 0.3) + ')'
-                            : 'rgba(255,238,198,' + (Math.random() * 0.26) + ')';
+      g.fillStyle = t < 0.5 ? 'rgba(60,38,16,' + (Math.random() * 0.34) + ')'
+                            : 'rgba(178,150,104,' + (Math.random() * 0.22) + ')';
       var r = 1 + Math.random() * 2.4;
       g.fillRect(Math.random() * 512, Math.random() * 512, r, r);
     }
@@ -858,11 +858,11 @@
     [70, 326].forEach(function (y) {
       for (var sx = 40; sx < 500; sx += 148) {
         var w = 116, h = 74;
-        g.fillStyle = '#B9A67C';
+        g.fillStyle = '#6E6248';
         g.beginPath();
         if (g.roundRect) { g.roundRect(sx, y, w, h, 16); } else { g.rect(sx, y, w, h); }
         g.fill();
-        g.fillStyle = 'rgba(252,240,210,.55)';
+        g.fillStyle = 'rgba(150,136,106,.5)';
         g.beginPath();
         if (g.roundRect) { g.roundRect(sx + 4, y + 4, w - 8, h - 12, 13); } else { g.rect(sx + 4, y + 4, w - 8, h - 12); }
         g.fill();
@@ -870,16 +870,16 @@
     });
 
     // mossy lane seams
-    g.fillStyle = 'rgba(124,196,72,.5)';
+    g.fillStyle = 'rgba(56,102,28,.55)';
     g.fillRect(512 * 0.335 - 3, 0, 6, 512);
     g.fillRect(512 * 0.665 - 3, 0, 6, 512);
 
     // grass creeping in at the edges
-    g.fillStyle = 'rgba(104,180,56,.85)';
+    g.fillStyle = 'rgba(46,88,22,.85)';
     g.fillRect(0, 0, 14, 512); g.fillRect(512 - 14, 0, 14, 512);
 
     // fallen leaves blown across the path
-    var leafCols = ['rgba(206,118,36,.72)', 'rgba(178,86,30,.68)', 'rgba(224,164,48,.62)'];
+    var leafCols = ['rgba(132,70,18,.72)', 'rgba(104,46,14,.68)', 'rgba(150,100,24,.62)'];
     for (var lf = 0; lf < 34; lf++) {
       g.save();
       g.translate(Math.random() * 512, Math.random() * 512);
@@ -913,7 +913,7 @@
   // lawn either side
   var lawn = new THREE.Mesh(
     new THREE.PlaneGeometry(52, TRACK_LEN + 40),
-    new THREE.MeshStandardMaterial({ color: 0x63C22E, emissive: 0x1E5210, emissiveIntensity: 0.35, roughness: 1 })
+    new THREE.MeshStandardMaterial({ color: 0x35731A, emissive: 0x0E2C08, emissiveIntensity: 0.3, roughness: 1 })
   );
   lawn.rotation.x = -Math.PI / 2;
   lawn.position.set(0, -0.05, track.position.z);
@@ -924,7 +924,7 @@
   [-1, 1].forEach(function (s) {
     var board = new THREE.Mesh(
       new THREE.BoxGeometry(0.14, 0.13, TRACK_LEN),
-      new THREE.MeshStandardMaterial({ color: 0xB07C42, roughness: 0.88 })
+      new THREE.MeshStandardMaterial({ color: 0x6E4A22, roughness: 0.88 })
     );
     board.position.set(s * TRACK_HW, 0.055, track.position.z);
     board.receiveShadow = true;
@@ -933,27 +933,27 @@
 
   // =============================================================== scenery
   var MAT = {
-    postWood:  new THREE.MeshStandardMaterial({ color: 0xB07C42, roughness: 0.9 }),
-    railWood:  new THREE.MeshStandardMaterial({ color: 0xC08A4C, roughness: 0.9 }),
-    trunk:     new THREE.MeshStandardMaterial({ color: 0x8A5A32, roughness: 0.95 }),
-    canopy:    new THREE.MeshStandardMaterial({ color: 0x36AC28, emissive: 0x0E4410, emissiveIntensity: 0.3, roughness: 1 }),
-    canopyLit: new THREE.MeshStandardMaterial({ color: 0x86E04C, emissive: 0x2A6414, emissiveIntensity: 0.3, roughness: 1 }),
+    postWood:  new THREE.MeshStandardMaterial({ color: 0x6E4A22, roughness: 0.9 }),
+    railWood:  new THREE.MeshStandardMaterial({ color: 0x7A5628, roughness: 0.9 }),
+    trunk:     new THREE.MeshStandardMaterial({ color: 0x543418, roughness: 0.95 }),
+    canopy:    new THREE.MeshStandardMaterial({ color: 0x1E6614, emissive: 0x0E4410, emissiveIntensity: 0.3, roughness: 1 }),
+    canopyLit: new THREE.MeshStandardMaterial({ color: 0x479128, emissive: 0x2A6414, emissiveIntensity: 0.3, roughness: 1 }),
 
-    pot:       new THREE.MeshStandardMaterial({ color: 0xFF6A22, emissive: 0x7A2200, emissiveIntensity: 0.3, roughness: 0.78 }),
-    potRim:    new THREE.MeshStandardMaterial({ color: 0xD1501F, roughness: 0.78 }),
-    soil:      new THREE.MeshStandardMaterial({ color: 0x4E3418, roughness: 1 }),
+    pot:       new THREE.MeshStandardMaterial({ color: 0xB8480E, emissive: 0x461400, emissiveIntensity: 0.3, roughness: 0.78 }),
+    potRim:    new THREE.MeshStandardMaterial({ color: 0x8E3210, roughness: 0.78 }),
+    soil:      new THREE.MeshStandardMaterial({ color: 0x2E1E0C, roughness: 1 }),
 
     branch:    new THREE.MeshStandardMaterial({ color: 0x8A5A30, roughness: 0.95 }),
-    leaf:      new THREE.MeshStandardMaterial({ color: 0x4FC92E, emissive: 0x145210, emissiveIntensity: 0.32, roughness: 1 }),
-    leafLit:   new THREE.MeshStandardMaterial({ color: 0x9AEA55, emissive: 0x33701C, emissiveIntensity: 0.32, roughness: 1 }),
+    leaf:      new THREE.MeshStandardMaterial({ color: 0x2A7A18, emissive: 0x082806, emissiveIntensity: 0.32, roughness: 1 }),
+    leafLit:   new THREE.MeshStandardMaterial({ color: 0x54A032, emissive: 0x1A3E10, emissiveIntensity: 0.32, roughness: 1 }),
 
 
     plume:     new THREE.MeshStandardMaterial({ color: 0xFFF8EA, emissive: 0xFFEFD0, emissiveIntensity: 0.45, roughness: 0.62 }),
     plumeTip:  new THREE.MeshStandardMaterial({ color: 0xFF5A2E, emissive: 0xC42800, emissiveIntensity: 0.45, roughness: 0.6 }),
     plumeRib:  new THREE.MeshStandardMaterial({ color: 0xFFFBF0, roughness: 0.4 }),
 
-    metal:     new THREE.MeshStandardMaterial({ color: 0xB9C2CA, roughness: 0.34, metalness: 0.85 }),
-    tin:       new THREE.MeshStandardMaterial({ color: 0x3E9E76, roughness: 0.4, metalness: 0.5 }),
+    metal:     new THREE.MeshStandardMaterial({ color: 0x7C848C, roughness: 0.34, metalness: 0.85 }),
+    tin:       new THREE.MeshStandardMaterial({ color: 0x22624A, roughness: 0.4, metalness: 0.5 }),
     seedMat:   new THREE.MeshStandardMaterial({ color: 0xD8B26A, roughness: 0.9 }),
     tube:      new THREE.MeshStandardMaterial({ color: 0xCFE8F5, roughness: 0.15, metalness: 0.2,
                  transparent: true, opacity: 0.55 }),
@@ -965,12 +965,12 @@
     sack:      new THREE.MeshStandardMaterial({ color: 0xDCBE8C, roughness: 0.98 }),
     crow:      new THREE.MeshStandardMaterial({ color: 0x2A2636, roughness: 0.72 }),
     rubber:    new THREE.MeshStandardMaterial({ color: 0x2A2724, roughness: 0.95 }),
-    rock:      new THREE.MeshStandardMaterial({ color: 0x9AA0A6, roughness: 0.96 }),
-    rockDark:  new THREE.MeshStandardMaterial({ color: 0x7C838A, roughness: 0.96 }),
-    capstone:  new THREE.MeshStandardMaterial({ color: 0xC2C8CE, roughness: 0.9 }),
-    moss:      new THREE.MeshStandardMaterial({ color: 0x5FBF34, emissive: 0x1A5A10, emissiveIntensity: 0.3, roughness: 1 }),
-    tuft:      new THREE.MeshStandardMaterial({ color: 0x55B82C, emissive: 0x134A08, emissiveIntensity: 0.3, roughness: 1 }),
-    stalk:     new THREE.MeshStandardMaterial({ color: 0x4FA828, roughness: 1 }),
+    rock:      new THREE.MeshStandardMaterial({ color: 0x666C72, roughness: 0.96 }),
+    rockDark:  new THREE.MeshStandardMaterial({ color: 0x4E5459, roughness: 0.96 }),
+    capstone:  new THREE.MeshStandardMaterial({ color: 0x868C92, roughness: 0.9 }),
+    moss:      new THREE.MeshStandardMaterial({ color: 0x357018, emissive: 0x0C2E08, emissiveIntensity: 0.3, roughness: 1 }),
+    tuft:      new THREE.MeshStandardMaterial({ color: 0x2E6C16, emissive: 0x081F04, emissiveIntensity: 0.3, roughness: 1 }),
+    stalk:     new THREE.MeshStandardMaterial({ color: 0x2A5E14, roughness: 1 }),
     flowerA:   new THREE.MeshStandardMaterial({ color: 0xFFFFFF, emissive: 0xFFE2D0, emissiveIntensity: 0.32, roughness: 0.7 }),
     flowerB:   new THREE.MeshStandardMaterial({ color: 0xFF5FA8, emissive: 0xA5105A, emissiveIntensity: 0.38, roughness: 0.7 }),
     flowerC:   new THREE.MeshStandardMaterial({ color: 0xFFD23F, emissive: 0xB07800, emissiveIntensity: 0.38, roughness: 0.7 }),
@@ -2373,7 +2373,7 @@
     glow.position.x = laneX;
     sun.target.position.x = laneX * 0.5;
 
-    renderer.toneMappingExposure = 1.04 + flash * 0.8;
+    renderer.toneMappingExposure = 0.94 + flash * 0.8;
   }
 
   function render() {

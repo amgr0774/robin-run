@@ -1,5 +1,5 @@
 /* Robin Run - offline cache */
-var CACHE = 'feathersprint-v1';
+var CACHE = 'feathersprint-v2';
 var ASSETS = [
   './',
   './index.html',
