@@ -240,6 +240,26 @@
     color:rgba(246,241,226,.5); pointer-events:none;
   }
 
+  .tut{gap:12px}
+  .tut h2{margin-bottom:2px}
+  .tutrows{display:flex; flex-direction:column; gap:11px; width:100%; max-width:390px}
+  .tutrow{
+    display:flex; align-items:center; gap:12px; text-align:left;
+    background:rgba(37,48,27,.62); border:1px solid rgba(174,185,148,.22);
+    border-radius:13px; padding:10px 12px;
+  }
+  .tutrow svg{flex:none; width:58px; height:42px}
+  .tutrow .tt{display:flex; flex-direction:column; gap:2px; min-width:0}
+  .tutrow b{font-family:var(--display); font-weight:600; font-size:13.5px; letter-spacing:.01em}
+  .tutrow span{font-size:11.5px; color:#DDE3CC; line-height:1.35}
+  .tutrow i{font-style:normal; font-size:10.5px; color:var(--dim); line-height:1.3}
+  .tutrow.berry{border-color:rgba(242,182,76,.45); background:rgba(60,48,18,.5)}
+  @media (max-height:640px){
+    .tutrow{padding:7px 10px; gap:9px}
+    .tutrow svg{width:46px; height:34px}
+    .tutrow i{display:none}
+  }
+
   .nogl{position:absolute; inset:0; display:grid; place-items:center; padding:30px;
     text-align:center; color:var(--dim); font-size:13px; line-height:1.6; background:#25401C}
 
@@ -278,10 +298,86 @@
     <span class="bar"><span class="fill" id="powerFill"></span></span>
   </div>
 
+  <div class="screen tut" id="tutorial" hidden>
+    <h2>How to play</h2>
+
+    <div class="tutrows">
+      <div class="tutrow">
+        <svg viewBox="0 0 58 42" aria-hidden="true">
+          <path d="M2 34h54" stroke="#AEB994" stroke-width="2" fill="none"/>
+          <rect x="24" y="24" width="12" height="10" rx="2" fill="#B8480E"/>
+          <path d="M10 32C14 8 44 8 48 32" stroke="#6FD0FF" stroke-width="2.5"
+                fill="none" stroke-dasharray="4 3"/>
+          <path d="M48 32l-4-6 8 0z" fill="#6FD0FF"/>
+          <circle cx="11" cy="30" r="4" fill="#FF5324"/>
+        </svg>
+        <span class="tt">
+          <b>Flap over</b>
+          <span><b>&uarr;</b> or <b>Space</b>, or swipe up. Press it <b>again in mid&#8209;air</b> for a second flap.</span>
+          <i>Flower pots, watering cans, wheelbarrows</i>
+        </span>
+      </div>
+
+      <div class="tutrow">
+        <svg viewBox="0 0 58 42" aria-hidden="true">
+          <path d="M2 34h54" stroke="#AEB994" stroke-width="2" fill="none"/>
+          <path d="M8 4h42" stroke="#7A5628" stroke-width="2.5" fill="none"/>
+          <rect x="16" y="5" width="9" height="16" rx="2" fill="#FF7FB4"/>
+          <rect x="30" y="5" width="9" height="18" rx="2" fill="#6FD0FF"/>
+          <path d="M6 30h44" stroke="#6FD0FF" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/>
+          <path d="M50 30l-6-4 0 8z" fill="#6FD0FF"/>
+          <circle cx="9" cy="30" r="4" fill="#FF5324"/>
+        </svg>
+        <span class="tt">
+          <b>Tuck under</b>
+          <span><b>&darr;</b>, or swipe down. Flatten out and slide beneath.</span>
+          <i>Bird feeders, washing lines</i>
+        </span>
+      </div>
+
+      <div class="tutrow">
+        <svg viewBox="0 0 58 42" aria-hidden="true">
+          <path d="M2 34h54" stroke="#AEB994" stroke-width="2" fill="none"/>
+          <rect x="6" y="12" width="13" height="22" rx="2" fill="#666C72"/>
+          <rect x="39" y="12" width="13" height="22" rx="2" fill="#666C72"/>
+          <path d="M22 26h14" stroke="#6FD0FF" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/>
+          <path d="M36 26l-6-4 0 8z" fill="#6FD0FF"/>
+          <circle cx="24" cy="26" r="4" fill="#FF5324"/>
+        </svg>
+        <span class="tt">
+          <b>Go around</b>
+          <span><b>&larr; &rarr;</b>, or swipe sideways. Too tall to fly over.</span>
+          <i>Stone walls, scarecrows</i>
+        </span>
+      </div>
+
+      <div class="tutrow berry">
+        <svg viewBox="0 0 58 42" aria-hidden="true">
+          <circle cx="29" cy="21" r="9" fill="#FFD84F" stroke="#C98A12" stroke-width="1.5"/>
+          <path d="M29 12v-4" stroke="#C98A12" stroke-width="2"/>
+          <path d="M9 21h7M42 21h7M29 3v4M29 35v4" stroke="#F6E7CF" stroke-width="2"
+                stroke-linecap="round" stroke-dasharray="3 2"/>
+          <circle cx="7" cy="21" r="2.5" fill="#F6E7CF"/>
+          <circle cx="51" cy="21" r="2.5" fill="#F6E7CF"/>
+          <circle cx="29" cy="39" r="2.5" fill="#F6E7CF"/>
+        </svg>
+        <span class="tt">
+          <b>Golden berry</b>
+          <span>Grab one and every feather flies to you for <b>8 seconds</b>.</span>
+          <i>Feathers are worth 10 points each</i>
+        </span>
+      </div>
+    </div>
+
+    <p>One mistake and the cat has you. Good luck.</p>
+    <button class="go" id="tutBtn">Let's go</button>
+  </div>
+
   <div class="cine" id="cine" hidden><span id="cineTxt">The cat is in the garden…</span></div>
   <div class="skiphint" id="skipHint" hidden>Space or tap to skip</div>
 
   <div class="corner">
+    <button class="chip" id="helpBtn" title="How to play" aria-label="How to play">?</button>
     <button class="chip" id="qualityBtn" title="Graphics quality">HIGH</button>
     <button class="chip" id="soundBtn" title="Sound on/off" aria-label="Sound on or off">♪</button>
   </div>
@@ -2554,6 +2650,14 @@
   document.getElementById('startBtn').addEventListener('click', startRun);
   document.getElementById('againBtn').addEventListener('click', startRun);
 
+  // shown once on a first visit, and any time the ? button is pressed
+  var tutorial = document.getElementById('tutorial');
+  function showTutorial() { tutorial.hidden = false; }
+  function hideTutorial() { tutorial.hidden = true; store('rr_tut', '1'); }
+  document.getElementById('tutBtn').addEventListener('click', hideTutorial);
+  document.getElementById('helpBtn').addEventListener('click', showTutorial);
+  if (!store('rr_tut')) showTutorial();
+
   var soundBtn = document.getElementById('soundBtn');
   function paintSound() {
     soundBtn.textContent = soundOn ? '♪' : '✕';
@@ -2575,6 +2679,10 @@
   window.addEventListener('keydown', function (e) {
     var k = e.key;
     if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Spacebar'].indexOf(k) >= 0) e.preventDefault();
+    if (!tutorial.hidden) {
+      if (k === ' ' || k === 'Spacebar' || k === 'Enter') hideTutorial();
+      return;
+    }
     if (state === 'ready' || state === 'dead') {
       if (k === ' ' || k === 'Spacebar' || k === 'Enter') startRun();
       return;
