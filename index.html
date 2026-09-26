@@ -444,8 +444,9 @@
   var JUMP_V    = 9.6;       // first flap, apex ~1.21
   var FLAP2_MUL = 0.62;      // second flap is weaker, so the stone wall stays unflyable
   var ROLL_TIME = 0.52;
-  var BASE_SPD  = 13;
+  var BASE_SPD  = 11;        // opens slower than it used to
   var MAX_SPD   = 29;
+  var RAMP_DIST = 1000;      // metres taken to reach full difficulty
 
   // the chase: clipping something hands the cat ground, flying clean wins it back
   var MAX_GAP      = 7.5;
@@ -468,6 +469,11 @@
   ];
 
   var CAT = { fur:0xF08A2E, dark:0xC25A12, paw:0xFFF0D6, eye:0xC9FF3D, nose:0xFF7FA0 };
+
+  // 0 at the start of a run, 1 once you are RAMP_DIST in. Speed, obstacle
+  // density and spacing all read from this, so the run opens gently and
+  // keeps tightening instead of being hard from the first obstacle.
+  function ramp() { return Math.min(1, dist / RAMP_DIST); }
 
   function sceneZ(z) { return -(z - PLAYER_Z); }
 
@@ -1979,10 +1985,21 @@
   function spawnGroup() {
     var free = [0, 1, 2];
     // weighted bag: low things are commonest, the long wall is rarest
-    var bag = ['planter', 'planter', 'can', 'can', 'barrow',
-               'feeders', 'feeders', 'washline', 'washline',
-               'scarecrow', 'scarecrow', 'wall'];
-    var howMany = Math.random() < 0.52 ? 2 : 1;
+    // types arrive in stages: flap over it first, then things to tuck
+    // under, then the ones that force a lane change
+    var bag;
+    if (dist < 130) {
+      bag = ['planter', 'can', 'barrow'];
+    } else if (dist < 320) {
+      bag = ['planter', 'planter', 'can', 'barrow', 'feeders', 'washline'];
+    } else {
+      bag = ['planter', 'planter', 'can', 'can', 'barrow',
+             'feeders', 'feeders', 'washline', 'washline',
+             'scarecrow', 'scarecrow', 'wall'];
+    }
+    // no two-lane rows at all for the first stretch, then they build up
+    var doubles = 0.55 * Math.max(0, Math.min(1, (dist - 160) / 640));
+    var howMany = Math.random() < doubles ? 2 : 1;
 
     for (var i = 0; i < howMany && free.length > 1; i++) {
       var L = free.splice(Math.floor(Math.random() * free.length), 1)[0];
@@ -2194,7 +2211,7 @@
 
     guardGap = CAT_RIDE + Math.sin(clock * 0.8) * 0.35;   // always on your tail
 
-    speed = Math.min(MAX_SPD, BASE_SPD + dist * 0.040);
+    speed = BASE_SPD + (MAX_SPD - BASE_SPD) * ramp();
     lastMove = speed * (stumble > 0 ? 0.55 : 1) * dt;
     dist += lastMove;
 
@@ -2236,7 +2253,9 @@
 
     if (dist >= nextSpawn) {
       spawnGroup();
-      nextSpawn = dist + speed * (0.86 + Math.random() * 0.48);
+      // the factor shrinks as you go, so reaction time drops from about
+      // 1.5s at the start to about 1.0s at full pace
+      nextSpawn = dist + speed * (1.30 - 0.48 * ramp() + Math.random() * 0.34);
     }
 
     // ---- collision, in world units
